@@ -3,15 +3,15 @@
 const fs = require('fs');
 const turf = require('@turf/turf');
 
-let features = []
-let collection = null
 const run = async () => {
+    let features = []
+
     const data = fs.readFileSync("./base_registry.json", { encoding: "utf-8" })
     const registry = JSON.parse(data);
 
     for (let index = 0; index < registry.length; index++) {
         const e = registry[index];
-        if(!(e.lat && e.long)){
+        if (!(e.lat && e.long)) {
             continue;
         }
         let properties = Object.fromEntries(
@@ -25,7 +25,6 @@ const run = async () => {
         features.push(geometryPointWithProperties)
     }
 
-    console.log(features[0])
     let collection = turf.featureCollection(features);
     fs.writeFileSync("./data.geojson", JSON.stringify(collection, null, 2));
 }
