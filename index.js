@@ -11,6 +11,9 @@ const run = async () => {
 
     for (let index = 0; index < registry.length; index++) {
         const e = registry[index];
+        if(!(e.lat && e.long)){
+            continue;
+        }
         let properties = Object.fromEntries(
             Object.entries(e)
                 .filter(([k, v]) => {
