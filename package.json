@@ -1,16 +1,23 @@
 {
-  "name": "vlaanderen",
-  "version": "1.0.0",
-  "description": "",
+  "name": "base-registry-to-geo-json",
+  "version": "2.0.0",
+  "description": "Script to convert the base registry from open data flanders to geojson",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "build-geojson": "node index.js > base_registry.geojson"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "base_registry",
+    "geojson",
+    "open data flanders"
+  ],
+  "author": "Ward Beyens",
   "license": "ISC",
   "dependencies": {
-    "@turf/turf": "^6.5.0"
-  }
+    "@turf/turf": "^6.5.0",
+    "axios": "^1.1.3",
+    "csvtojson": "^2.0.10"
+  },
+  "type": "module"
 }

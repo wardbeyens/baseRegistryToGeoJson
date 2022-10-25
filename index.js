@@ -1,32 +1,49 @@
 //data from: https://opendata.visitflanders.org/sector/accommodation/base_registry
 //all data from: https://opendata.visitflanders.org/sector/accommodation/base_registry.json?limit=-1
-const fs = require('fs');
-const turf = require('@turf/turf');
+import csv from "csvtojson";
+import axios from "axios";
+import { point, featureCollection } from "@turf/turf";
 
-const run = async () => {
-    let features = []
+const getCSVconvertToJSON = async () => {
+  console.error("fetching data");
+  const csvUrl = `https://opendata.visitflanders.org/sector/accommodation/base_registry.csv?limit=-1`;
+  const response = await axios.get(csvUrl, { responseType: "blob" });
+  const csvString = response.data.toString();
+  console.error("done fetching data");
+  const o = await csv({
+    delimiter: ";",
+  }).fromString(csvString);
+  return o;
+};
 
-    const data = fs.readFileSync("./base_registry.json", { encoding: "utf-8" })
-    const registry = JSON.parse(data);
+const baseRegistryToGeoJson = async () => {
+  let features = [];
 
-    for (let index = 0; index < registry.length; index++) {
-        const e = registry[index];
-        if (!(e.lat && e.long)) {
-            continue;
-        }
-        let properties = Object.fromEntries(
-            Object.entries(e)
-                .filter(([k, v]) => {
-                    return !!v;
-                })
-        );
+  const registry = await getCSVconvertToJSON();
 
-        let geometryPointWithProperties = turf.point([e.long, e.lat], properties);
-        features.push(geometryPointWithProperties)
+  console.error("start creating features");
+  for (let index = 0; index < registry.length; index++) {
+    const e = registry[index];
+    if (!(e.lat && e.long)) {
+      continue;
     }
+    let properties = Object.fromEntries(
+      Object.entries(e).filter(([k, v]) => {
+        return !!v;
+      })
+    );
 
-    let collection = turf.featureCollection(features);
-    fs.writeFileSync("./data.geojson", JSON.stringify(collection, null, 2));
-}
+    let geometryPointWithProperties = point([e.long, e.lat], properties);
+    features.push(geometryPointWithProperties);
+  }
+  const fc = featureCollection(features);
+  console.error("done creating featureCollection");
+  return fc;
+};
 
-run()
+baseRegistryToGeoJson()
+  .then((geoJson) => process.stdout.write(JSON.stringify(geoJson, null, 2)))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
