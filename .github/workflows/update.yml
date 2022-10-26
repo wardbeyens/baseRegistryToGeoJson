@@ -1,7 +1,7 @@
 name: update base registry geojson workflow
 on:
   schedule:
-    - cron: "*/2 * * * *"
+    - cron: "*/5 * * * *"https://docs.github.com/actions/reference/workflow-syntax-for-github-actions#onschedule
   push:
     branches:
       - main
