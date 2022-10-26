@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  update:
+  build:
     name: Update base registry geojson
     runs-on: ubuntu-latest
     steps:
@@ -24,9 +24,7 @@ jobs:
         run: npm install
       - name: Build geojson
         run: npm run build-geojson
-      - name: "Run if changes have been detected"
-        if: steps.auto-commit-action.outputs.changes_detected == 'true'
-        run: echo "Changes!"
-      - name: "Run if no changes have been detected"
-        if: steps.auto-commit-action.outputs.changes_detected == 'false'
-        run: echo "No Changes!"
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          body: Update base registry geojson
