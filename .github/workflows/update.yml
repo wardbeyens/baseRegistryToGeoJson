@@ -1,0 +1,28 @@
+name: update base registry geojson workflow
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+
+jobs:
+  update:
+    name: Update base registry geojson
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Scheduled Run
+        run: echo "This is the start of the scheduled run"
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: npm install
+      - name: Build geojson
+        run: npm run build-geojson
+      - name: "Run if changes have been detected"
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        run: echo "Changes!"
+      - name: "Run if no changes have been detected"
+        if: steps.auto-commit-action.outputs.changes_detected == 'false'
+        run: echo "No Changes!"
