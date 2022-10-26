@@ -1,7 +1,7 @@
 name: update base registry geojson workflow
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/2 * * * *"
   push:
     branches:
       - main
