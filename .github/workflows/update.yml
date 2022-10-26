@@ -1,4 +1,4 @@
-name: update base registry geojson workflow
+name: Auo pdate base_registry geojson
 on:
   schedule:
     - cron: "*/5 * * * *"
