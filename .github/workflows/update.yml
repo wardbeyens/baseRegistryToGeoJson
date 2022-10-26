@@ -1,7 +1,7 @@
-name: Auo pdate base_registry geojson
+name: Auto update base_registry geojson
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "3/5 * * * *"
 
 jobs:
   build:
